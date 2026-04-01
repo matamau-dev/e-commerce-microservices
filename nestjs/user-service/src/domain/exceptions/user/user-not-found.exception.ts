@@ -1,4 +1,6 @@
-export class UserNotFoundException extends Error {
+import { DomainException } from '../domain.exception';
+
+export class UserNotFoundException extends DomainException {
 	constructor(userId: string) {
 		super(`User with ID ${userId} not found.`);
 	}

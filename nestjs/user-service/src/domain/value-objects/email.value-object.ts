@@ -1,14 +1,16 @@
+import { ValidationException } from '../exceptions/validation.exception';
+
 export class Email {
 	private readonly value: string;
 
 	constructor(email: string) {
 		if (!email?.trim()) {
-			throw new Error('El email es requerido');
+			throw new ValidationException('El email es requerido');
 		}
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(email)) {
-			throw new Error(`El email ${email} no es válido`);
+			throw new ValidationException(`El email ${email} no es válido`);
 		}
 
 		this.value = email.toLowerCase().trim();

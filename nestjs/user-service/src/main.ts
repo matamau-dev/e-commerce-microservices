@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DomainExceptionFilter } from './presentation/filters/domain-exception.filter';
 
 async function bootstrap() {
 	const logger = new Logger('API USER-SERVICE');
@@ -13,6 +14,8 @@ async function bootstrap() {
 			transform: true,
 		}),
 	);
+
+	app.useGlobalFilters(new DomainExceptionFilter());
 	app.setGlobalPrefix('api/v1');
 	const config = new DocumentBuilder()
 		.setTitle('API')

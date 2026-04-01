@@ -7,7 +7,7 @@ import { UpdatePasswordInput } from './update-password.input';
 import { UpdatePasswordOutput } from './update-password.output';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';
 import { InvalidPasswordException } from 'src/domain/exceptions/user/invalid-password.exception';
-import { SamePasswordException } from 'src/domain/exceptions/user/samep-assword.exception';
+import { SamePasswordException } from 'src/domain/exceptions/user/same-password.exception';
 
 export class UpdatePasswordUseCase {
 	constructor(
@@ -34,7 +34,6 @@ export class UpdatePasswordUseCase {
 		);
 		if (samePassword) throw new SamePasswordException();
 
-		// Hashea y guarda la nueva
 		user.password = await this.hashService.hash(input.newPassword);
 
 		await this.userWriter.update(user);
