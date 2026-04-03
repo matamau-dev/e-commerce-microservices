@@ -18,11 +18,9 @@ export class RegisterClientUseCase {
 	) {}
 
 	async execute(input: RegisterClientInput): Promise<RegisterClientOutput> {
-		console.log(`Esto llega ${input}`);
 		const email = new Email(input.email);
 		const phone = new Phone(input.phone);
 		const userName = new UserName(input.userName);
-		console.log('Pasa las verificaciones.', email.getValue());
 		const exists = await this.userVerification.existByEmail(
 			email.getValue(),
 		);

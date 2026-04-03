@@ -1,4 +1,6 @@
 {
 	"material-icon-theme.activeIconPack": "nest",
-	"material-icon-theme.folders.color": "#42a5f5"
+	"material-icon-theme.folders.color": "#42a5f5",
+	"material-icon-theme.showUpdateMessage": false,
+	"material-icon-theme.showWelcomeMessage": false
 }
