@@ -1,0 +1,100 @@
+_format_version: "3.0"
+
+services:
+  # ── Auth MS ────────────────────────────────────────────
+  - name: auth-service
+    url: http://auth-service:3002
+
+    routes:
+      - name: auth-login
+        paths: ["/api/v1/auth/login"]
+        methods: [POST]
+        strip_path: false
+        # pública — no necesita token
+
+      - name: auth-refresh
+        paths: ["/api/v1/auth/refresh"]
+        methods: [POST]
+        strip_path: false
+        # pública — el refresh token es su propia autenticación
+
+      - name: auth-logout
+        paths: ["/api/v1/auth/logout"]
+        methods: [POST]
+        strip_path: false
+        plugins:
+          - name: jwt
+            config:
+              secret_is_base64: false
+
+      - name: auth-2fa
+        paths: ["/api/v1/two-factor"]
+        methods: [POST]
+        strip_path: false
+        plugins:
+          - name: jwt
+            config:
+              secret_is_base64: false
+
+      - name: auth-password-forgot
+        paths: ["/api/v1/password/forgot"]
+        methods: [POST]
+        strip_path: false
+        # pública — no tiene sesión activa cuando olvidó su contraseña
+
+      - name: auth-password-reset
+        paths: ["/api/v1/password/reset"]
+        methods: [POST]
+        strip_path: false
+        # pública — usa el reset token del correo, no JWT
+
+  # ── User MS ────────────────────────────────────────────
+  - name: user-service
+    url: http://user-service:3001
+
+    routes:
+      - name: user-register
+        paths: ["/api/v1/users/register"]
+        methods: [POST]
+        strip_path: false
+        # pública — aún no tiene token
+
+      - name: user-profile
+        paths: ["/api/v1/users/profile"]
+        methods: [GET, PATCH]
+        strip_path: false
+        plugins:
+          - name: jwt
+            config:
+              secret_is_base64: false
+
+      - name: user-password
+        paths: ["/api/v1/users/password"]
+        methods: [PATCH]
+        strip_path: false
+        plugins:
+          - name: jwt
+            config:
+              secret_is_base64: false
+
+      - name: user-account
+        paths: ["/api/v1/users/account"]
+        methods: [DELETE]
+        strip_path: false
+        plugins:
+          - name: jwt
+            config:
+              secret_is_base64: false
+
+# ── Plugins globales ───────────────────────────────────────
+plugins:
+  - name: rate-limiting
+    config:
+      minute: 60
+      policy: local
+
+  - name: cors
+    config:
+      origins: ["*"]
+      methods: [GET, POST, PATCH, DELETE, OPTIONS]
+      headers: [Authorization, Content-Type]

@@ -1,0 +1,106 @@
+services:
+  kong:
+    image: kong:latest
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/kong.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_LOG_LEVEL: info
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - ./kong/kong.yml:/kong/kong.yml
+    networks:
+      - tradeflow-network
+    depends_on:
+      - auth-service
+      - user-service
+
+    # ── PostgreSQL─────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: tradeflow_auth
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - tradeflow-network
+
+    # ── Auth MS ─────────────────────────────────────────
+  auth-service:
+    build:
+      context: ./nestjs/auth-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      PORTS: 3002
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: secret
+      DB_BASE: tradeflow_auth
+      JWT_PRIVATE_KEY_PATH: src/infrastructure/jwt/rs256/private.key
+      JWT_PUBLIC_KEY_PATH: src/infrastructure/jwt/rs256/public.key
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      USER_SERVICE_URL: http://user-service:3001
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      TOTP_APP_NAME: TradeFlow
+    networks:
+      - tradeflow-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "until npm run migration:run:prod; do echo 'Waiting for DB...'; sleep 5; done; npm run start:prod"
+
+  # ── User MS ─────────────────────────────────────────
+  user-service:
+    build:
+      context: ./nestjs/user-service
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      PORTS: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: secret
+      DB_BASE: tradeflow_users
+      JWT_PUBLIC_KEY_PATH: src/infrastructure/jwt/rs256/public.key
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+    networks:
+      - tradeflow-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "until npm run migration:run:prod; do echo 'Waiting for DB...'; sleep 5; done; npm run start:prod"
+
+  # ── RabbitMQ ─────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672" # panel web solo en desarrollo
+    networks:
+      - tradeflow-network
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+networks:
+  tradeflow-network:
+    driver: bridge # los MS se hablan entre sí, nadie los ve desde fuera
+
+volumes:
+  postgres_data:
+  rabbitmq_data:

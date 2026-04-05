@@ -36,6 +36,7 @@ async function bootstrap() {
 		methods: ['GET', 'POST', 'PUT', 'DELETE'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 	});
+	logger.log('Starting API... in http://localhost:' + process.env.PORTS);
 	await app.listen(process.env.PORTS ?? 3000);
 
 	logger.log(
