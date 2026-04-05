@@ -1,3 +1,5 @@
+import { RoleEnum } from '../../../../domain/enums/role.enum';
+
 import {
 	Column,
 	CreateDateColumn,
@@ -10,39 +12,42 @@ import {
 @Entity('users')
 export class UserOrmEntity {
 	@PrimaryGeneratedColumn('uuid')
-	id: string;
+	id!: string;
 
 	@Column({ length: 100 })
-	name: string;
+	name!: string;
 
 	@Column({ unique: true, length: 150 })
-	email: string;
+	email!: string;
 
 	@Column({ unique: true, length: 150 })
-	user_name: string;
+	user_name!: string;
 
 	@Column({ unique: true, length: 150 })
-	phone: string;
+	phone!: string;
 
 	@Column()
-	password: string;
+	password!: string;
 
-	@Column({ default: false })
-	is_active: boolean;
+	@Column({ default: true })
+	is_active!: boolean;
+
+	@Column({type:"enum",enum:RoleEnum, default: RoleEnum.COMPRADOR})
+	role!: RoleEnum;
 
 	@CreateDateColumn({
 		type: 'timestamp',
 		default: () => 'CURRENT_TIMESTAMP',
 		select: true,
 	})
-	created_at: Date;
+	created_at!: Date;
 
 	@UpdateDateColumn({
 		type: 'timestamp',
 		default: () => 'CURRENT_TIMESTAMP',
 		select: false,
 	})
-	updated_at: Date;
+	updated_at!: Date;
 
 	@DeleteDateColumn({ type: 'timestamp', nullable: true, select: false })
 	deleted_at?: Date;

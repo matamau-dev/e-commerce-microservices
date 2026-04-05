@@ -26,6 +26,7 @@ export class UserPgRepository
 
 	async findByEmail(email: string): Promise<User | null> {
 		const found = await this.orm.findOne({ where: { email } });
+
 		return found ? this.toDomain(found) : null;
 	}
 
@@ -70,6 +71,7 @@ export class UserPgRepository
 		user.userName = new UserName(orm.user_name);
 		user.email = new Email(orm.email);
 		user.phone = new Phone(orm.phone);
+		user.role = orm.role;
 		user.password = orm.password;
 		user.isActive = orm.is_active;
 		user.createdAt = orm.created_at;
@@ -85,6 +87,7 @@ export class UserPgRepository
 			email: user.email.getValue(),
 			phone: user.phone.getValue(),
 			password: user.password,
+			role: user.role,
 			is_active: user.isActive,
 			deleted_at: user.deletedAt,
 		};

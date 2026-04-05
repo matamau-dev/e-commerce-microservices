@@ -18,7 +18,7 @@ export class LoginAttemptPgRepository
 	) {}
 
 	async create(attempt: LoginAttempt): Promise<void> {
-		const saved = await this.orm.save(this.toOrm(attempt));
+		await this.orm.save(this.toOrm(attempt));
 	}
 
 	async countRecentFailedByEmail(

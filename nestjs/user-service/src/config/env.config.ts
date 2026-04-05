@@ -21,6 +21,9 @@ export const envConfig = () => {
 			timeCost: Number(env.ARGON2_TIME_COST) || 3,
 			parallelism: Number(env.ARGON2_PARALLELISM) || 4,
 		},
+		jwt: {
+			publicKeyPath: env.JWT_PUBLIC_KEY_PATH,
+		},
 	};
 };
 

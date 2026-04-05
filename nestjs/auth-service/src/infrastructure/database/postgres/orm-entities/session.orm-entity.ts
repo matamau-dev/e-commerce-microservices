@@ -1,4 +1,6 @@
+import { RoleEnum } from '../../../../domain/enums/role.enum';
 // orm-entities/session.orm-entity.ts
+
 import {
 	Entity,
 	PrimaryGeneratedColumn,
@@ -14,8 +16,8 @@ export class SessionOrmEntity {
 	@Column({ name: 'user_id' })
 	userId: string;
 
-	@Column({ name: 'role' })
-	role: string;
+	@Column({ type: 'enum', enum: RoleEnum })
+	role: RoleEnum;
 
 	@Column({ name: 'refresh_token' })
 	refreshToken: string;

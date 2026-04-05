@@ -29,6 +29,7 @@ export class LoginUseCase {
 
 	async execute(input: LoginInput): Promise<LoginOutput> {
 		const email = new Email(input.email);
+
 		const recentFailures =
 			await this.loginAttemptReader.countRecentFailedByEmail(
 				input.email,

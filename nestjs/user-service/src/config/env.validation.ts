@@ -17,6 +17,9 @@ export interface EnvVars {
 	ARGON2_MEMORY_COST: number;
 	ARGON2_TIME_COST: number;
 	ARGON2_PARALLELISM: number;
+
+	// JWT
+	JWT_PUBLIC_KEY_PATH: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -38,4 +41,7 @@ export const envValidationSchema = Joi.object({
 	ARGON2_MEMORY_COST: Joi.number().min(8192).default(65536),
 	ARGON2_TIME_COST: Joi.number().min(1).default(3),
 	ARGON2_PARALLELISM: Joi.number().min(1).default(4),
+
+	// JWT
+	JWT_PUBLIC_KEY_PATH: Joi.string().required(),
 }).unknown(true);
