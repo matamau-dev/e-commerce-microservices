@@ -2,6 +2,6 @@ import { DomainException } from '../domain.exception';
 
 export class EmailAlreadyExistsException extends DomainException {
 	constructor(email: string) {
-		super(`The email ${email} already exists.`);
+		super(`El correo ${email} ya esta en uso.`);
 	}
 }
