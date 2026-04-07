@@ -6,7 +6,6 @@ import { UserName } from 'src/domain/value-objects/user-name.value-object';
 export class User {
 	id!: string;
 	name!: string;
-	userName!: UserName;
 	email!: Email;
 	phone!: Phone;
 	password!: string;

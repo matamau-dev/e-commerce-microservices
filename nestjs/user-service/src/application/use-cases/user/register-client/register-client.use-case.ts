@@ -10,6 +10,7 @@ import { Email } from 'src/domain/value-objects/email.value-object';
 import { Phone } from 'src/domain/value-objects/phone.value-object';
 import { UserName } from 'src/domain/value-objects/user-name.value-object';
 import { EmailAlreadyExistsException } from 'src/domain/exceptions/user/email-already-exists.exception';
+import { PhoneAlreadyExistsException } from 'src/domain/exceptions/user/phone-already-exists.exception';
 export class RegisterClientUseCase {
 	constructor(
 		private readonly userWriter: UserWriter,
@@ -20,18 +21,21 @@ export class RegisterClientUseCase {
 	async execute(input: RegisterClientInput): Promise<RegisterClientOutput> {
 		const email = new Email(input.email);
 		const phone = new Phone(input.phone);
-		const userName = new UserName(input.userName);
-		const exists = await this.userVerification.existByEmail(
+		const existsEmail = await this.userVerification.existByEmail(
 			email.getValue(),
 		);
-		if (exists) throw new EmailAlreadyExistsException(email.getValue());
+		const existPhone = await this.userVerification.existByPhone(
+			phone.getValue(),
+		);
+		if (existsEmail)
+			throw new EmailAlreadyExistsException(email.getValue());
+		if (existPhone) throw new PhoneAlreadyExistsException(phone.getValue());
 
 		const hashedPassword = await this.hashService.hash(input.password);
 
 		const user = new User();
 		user.id = crypto.randomUUID();
 		user.name = input.name.trim();
-		user.userName = userName;
 		user.email = email;
 		user.phone = phone;
 		user.password = hashedPassword;
@@ -43,7 +47,6 @@ export class RegisterClientUseCase {
 		return {
 			id: user.id,
 			name: user.name,
-			userName: user.userName.getValue(),
 			email: user.email.getValue(),
 			phone: user.phone.getValue(),
 			createdAt: user.createdAt,

@@ -63,28 +63,16 @@ services:
         paths: ["/api/v1/users/profile"]
         methods: [GET, PATCH]
         strip_path: false
-        plugins:
-          - name: jwt
-            config:
-              secret_is_base64: false
 
       - name: user-password
         paths: ["/api/v1/users/password"]
         methods: [PATCH]
         strip_path: false
-        plugins:
-          - name: jwt
-            config:
-              secret_is_base64: false
 
       - name: user-account
         paths: ["/api/v1/users/account"]
         methods: [DELETE]
         strip_path: false
-        plugins:
-          - name: jwt
-            config:
-              secret_is_base64: false
 
 # ── Plugins globales ───────────────────────────────────────
 plugins:

@@ -34,10 +34,10 @@ export class UserPgRepository
 		return this.orm.existsBy({ email });
 	}
 
-	async existsByUserName(userName: string): Promise<boolean> {
-		return this.orm.existsBy({ user_name: userName });
+	async existsByPhone(phone:string):Promise<boolean>{
+		return this.orm.existsBy({phone})
 	}
-
+	
 	async create(user: User): Promise<User> {
 		const saved = await this.orm.save(this.toOrm(user));
 		return this.toDomain(saved);
@@ -68,7 +68,6 @@ export class UserPgRepository
 		const user = new User();
 		user.id = orm.id;
 		user.name = orm.name;
-		user.userName = new UserName(orm.user_name);
 		user.email = new Email(orm.email);
 		user.phone = new Phone(orm.phone);
 		user.role = orm.role;
@@ -83,7 +82,6 @@ export class UserPgRepository
 		return {
 			id: user.id,
 			name: user.name,
-			user_name: user.userName.getValue(),
 			email: user.email.getValue(),
 			phone: user.phone.getValue(),
 			password: user.password,

@@ -21,9 +21,6 @@ export class UserOrmEntity {
 	email!: string;
 
 	@Column({ unique: true, length: 150 })
-	user_name!: string;
-
-	@Column({ unique: true, length: 150 })
 	phone!: string;
 
 	@Column()

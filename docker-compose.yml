@@ -60,6 +60,8 @@ services:
       TOTP_APP_NAME: TradeFlow
     networks:
       - tradeflow-network
+    ports:
+      - "3002:3002"
     depends_on:
       postgres:
         condition: service_healthy
@@ -80,6 +82,8 @@ services:
       DB_BASE: tradeflow_users
       JWT_PUBLIC_KEY_PATH: src/infrastructure/jwt/rs256/public.key
       INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+    ports:
+      - "3001:3001"
     networks:
       - tradeflow-network
     depends_on:
