@@ -5,7 +5,6 @@ import {
 import { UpdateProfileInput } from './update-profile.input';
 import { UpdateProfileOutput } from './update-profile.output';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';
-import { UserName } from 'src/domain/value-objects/user-name.value-object';
 import { Phone } from 'src/domain/value-objects/phone.value-object';
 
 export class UpdateProfileUsecase {

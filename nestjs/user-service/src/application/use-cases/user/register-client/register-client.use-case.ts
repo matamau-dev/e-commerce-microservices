@@ -8,7 +8,6 @@ import { User } from 'src/domain/entities/user/user.entity';
 import { HashService } from 'src/domain/services/hash.service';
 import { Email } from 'src/domain/value-objects/email.value-object';
 import { Phone } from 'src/domain/value-objects/phone.value-object';
-import { UserName } from 'src/domain/value-objects/user-name.value-object';
 import { EmailAlreadyExistsException } from 'src/domain/exceptions/user/email-already-exists.exception';
 import { PhoneAlreadyExistsException } from 'src/domain/exceptions/user/phone-already-exists.exception';
 export class RegisterClientUseCase {

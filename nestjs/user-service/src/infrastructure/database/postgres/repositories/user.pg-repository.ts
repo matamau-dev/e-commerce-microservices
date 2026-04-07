@@ -7,7 +7,6 @@ import {
 } from 'src/domain/repositories/user.repository';
 import { UserOrmEntity } from '../orm-entities/user.orm-entity';
 import { Repository } from 'typeorm';
-import { UserName } from 'src/domain/value-objects/user-name.value-object';
 import { Email } from 'src/domain/value-objects/email.value-object';
 import { Phone } from 'src/domain/value-objects/phone.value-object';
 
@@ -34,10 +33,10 @@ export class UserPgRepository
 		return this.orm.existsBy({ email });
 	}
 
-	async existsByPhone(phone:string):Promise<boolean>{
-		return this.orm.existsBy({phone})
+	async existsByPhone(phone: string): Promise<boolean> {
+		return this.orm.existsBy({ phone });
 	}
-	
+
 	async create(user: User): Promise<User> {
 		const saved = await this.orm.save(this.toOrm(user));
 		return this.toDomain(saved);

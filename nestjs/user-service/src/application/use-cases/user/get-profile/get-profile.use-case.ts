@@ -13,7 +13,6 @@ export class GetProfileUseCase {
 		return {
 			id: user.id,
 			name: user.name,
-			userName: user.userName.getValue(),
 			email: user.email.getValue(),
 			phone: user.phone.getValue(),
 			isActive: user.isActive,

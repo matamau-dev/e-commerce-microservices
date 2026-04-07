@@ -85,7 +85,6 @@ export class UserController {
 		return this.updateProfile.execute({
 			userId: id,
 			name: dto.name,
-			userName: dto.userName,
 			phone: dto.phone,
 		});
 	}
