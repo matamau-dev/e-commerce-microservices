@@ -18,15 +18,6 @@ export class UpdateProfileDto {
 	name?: string;
 
 	@ApiPropertyOptional({
-		description: 'Nombre de usuario (mínimo 3 caracteres)',
-		example: 'juanp',
-	})
-	@IsOptional()
-	@IsString()
-	@MinLength(3)
-	userName?: string;
-
-	@ApiPropertyOptional({
 		description: 'Teléfono del usuario (10 dígitos)',
 		example: '5512345678',
 	})

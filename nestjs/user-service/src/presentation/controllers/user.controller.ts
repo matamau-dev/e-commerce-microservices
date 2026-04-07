@@ -48,7 +48,6 @@ export class UserController {
 	register(@Body() dto: RegisterDto) {
 		return this.registerClient.execute({
 			name: dto.name,
-			userName: dto.user_name,
 			email: dto.email,
 			phone: dto.phone,
 			password: dto.password,

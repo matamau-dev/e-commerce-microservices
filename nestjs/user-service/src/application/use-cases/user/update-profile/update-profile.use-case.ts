@@ -19,7 +19,6 @@ export class UpdateProfileUsecase {
 		if (!user) throw new UserNotFoundException(input.userId);
 
 		if (input.name) user.name = input.name.trim();
-		if (input.userName) user.userName = new UserName(input.userName);
 		if (input.phone) user.phone = new Phone(input.phone);
 
 		const updated = await this.userWriter.update(user);
@@ -27,7 +26,6 @@ export class UpdateProfileUsecase {
 		return {
 			id: updated.id,
 			name: updated.name,
-			userName: updated.userName.getValue(),
 			email: updated.email.getValue(),
 			phone: updated.phone.getValue(),
 		};
