@@ -4,7 +4,7 @@ import {
 	UserReader,
 	UserVerification,
 	UserWriter,
-} from 'src/domain/repositories/user.repository';
+} from 'src/domain/repositories/user/user.repository';
 import { UserOrmEntity } from '../orm-entities/user.orm-entity';
 import { Repository } from 'typeorm';
 import { Email } from 'src/domain/value-objects/email.value-object';

@@ -1,0 +1,49 @@
+import {
+	ProfileImageReader,
+	ProfileImageWriter,
+} from 'src/domain/repositories/image_user/profile-image.repository';
+import { LocalStorageService } from 'src/infrastructure/storage/local-storage.service';
+import { UploadProfileImageInput } from './upload-profile-image.input';
+import { UploadProfileImageOutput } from './upload-profile-image.output';
+import { ProfileImage } from 'src/domain/entities/image_user/profile-image.entity';
+
+export class UploadProfileImageUseCase {
+	constructor(
+		private readonly profileImageWriter: ProfileImageWriter,
+		private readonly profileImageReader: ProfileImageReader,
+		private readonly localStorageService: LocalStorageService,
+	) {}
+
+	async execute(
+		input: UploadProfileImageInput,
+	): Promise<UploadProfileImageOutput> {
+		const existing = await this.profileImageReader.findByUserId(
+			input.userId,
+		);
+		if (existing) {
+			await this.profileImageWriter.deleteByUserId(input.userId);
+		}
+
+		const url = this.localStorageService.getPublicUrl(
+			input.fileName,
+			input.folder,
+		);
+
+		const image = new ProfileImage();
+		image.id = crypto.randomUUID();
+		image.userId = input.userId;
+		image.url = url;
+		image.nameOriginal = input.originalName;
+		image.typeFile = input.typeFile;
+		image.createdAt = new Date();
+
+		const saved = await this.profileImageWriter.save(image);
+
+		return {
+			id: saved.id,
+			url: saved.url,
+			nameOriginal: saved.nameOriginal,
+			typeFile: saved.typeFile,
+		};
+	}
+}

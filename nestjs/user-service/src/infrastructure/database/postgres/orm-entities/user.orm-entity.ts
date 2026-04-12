@@ -5,9 +5,13 @@ import {
 	CreateDateColumn,
 	DeleteDateColumn,
 	Entity,
+	JoinColumn,
+	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
+import { FilesOrmEntity } from './file.orm-entity';
 
 @Entity('users')
 export class UserOrmEntity {
@@ -29,8 +33,12 @@ export class UserOrmEntity {
 	@Column({ default: true })
 	is_active!: boolean;
 
-	@Column({type:"enum",enum:RoleEnum, default: RoleEnum.COMPRADOR})
+	@Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.COMPRADOR })
 	role!: RoleEnum;
+
+	@OneToOne(() => FilesOrmEntity, (profile) => profile.user)
+	@JoinColumn({ name: 'profile_id' })
+	profileImages!: FilesOrmEntity[];
 
 	@CreateDateColumn({
 		type: 'timestamp',

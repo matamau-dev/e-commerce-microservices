@@ -1,7 +1,7 @@
 import {
 	UserReader,
 	UserWriter,
-} from 'src/domain/repositories/user.repository';
+} from 'src/domain/repositories/user/user.repository';
 import { HashService } from 'src/domain/services/hash.service';
 import { UpdatePasswordInput } from './update-password.input';
 import { UpdatePasswordOutput } from './update-password.output';

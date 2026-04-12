@@ -1,4 +1,4 @@
-import { UserReader } from 'src/domain/repositories/user.repository';
+import { UserReader } from 'src/domain/repositories/user/user.repository';
 import { GetProfileOutput } from './get-profile.output';
 import { GetProfileInput } from './get-profile.input';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';

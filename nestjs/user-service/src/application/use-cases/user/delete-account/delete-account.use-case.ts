@@ -1,7 +1,7 @@
 import {
 	UserReader,
 	UserWriter,
-} from 'src/domain/repositories/user.repository';
+} from 'src/domain/repositories/user/user.repository';
 import { HashService } from 'src/domain/services/hash.service';
 import { DeleteAccountInput } from './delete-account.input';
 import { DeleteAccountOutput } from './delete-account.output';

@@ -1,5 +1,5 @@
 import { RoleEnum } from 'src/domain/enums/role.enum';
-import { UserReader } from 'src/domain/repositories/user.repository';
+import { UserReader } from 'src/domain/repositories/user/user.repository';
 import { FindEmailInput } from './find-email.input';
 import { FindEmailOutput } from './find-email.output';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';

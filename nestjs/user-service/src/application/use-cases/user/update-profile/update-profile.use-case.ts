@@ -1,7 +1,7 @@
 import {
 	UserReader,
 	UserWriter,
-} from 'src/domain/repositories/user.repository';
+} from 'src/domain/repositories/user/user.repository';
 import { UpdateProfileInput } from './update-profile.input';
 import { UpdateProfileOutput } from './update-profile.output';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';

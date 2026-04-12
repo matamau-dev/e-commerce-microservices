@@ -1,7 +1,7 @@
 import {
 	UserVerification,
 	UserWriter,
-} from 'src/domain/repositories/user.repository';
+} from 'src/domain/repositories/user/user.repository';
 import { RegisterClientInput } from './register-client.input';
 import { RegisterClientOutput } from './register-client.output';
 import { User } from 'src/domain/entities/user/user.entity';
