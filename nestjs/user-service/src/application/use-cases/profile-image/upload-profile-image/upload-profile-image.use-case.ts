@@ -21,6 +21,10 @@ export class UploadProfileImageUseCase {
 			input.userId,
 		);
 		if (existing) {
+			await this.localStorageService.deleteFile(
+				existing.url,
+				'profile-images',
+			);
 			await this.profileImageWriter.deleteByUserId(input.userId);
 		}
 
@@ -32,7 +36,7 @@ export class UploadProfileImageUseCase {
 		const image = new ProfileImage();
 		image.id = crypto.randomUUID();
 		image.userId = input.userId;
-		image.url = url;
+		image.url = input.fileName;
 		image.nameOriginal = input.originalName;
 		image.typeFile = input.typeFile;
 		image.createdAt = new Date();
@@ -41,7 +45,7 @@ export class UploadProfileImageUseCase {
 
 		return {
 			id: saved.id,
-			url: saved.url,
+			url: url,
 			nameOriginal: saved.nameOriginal,
 			typeFile: saved.typeFile,
 		};

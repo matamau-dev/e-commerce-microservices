@@ -11,7 +11,7 @@ export class User {
 	password!: string;
 	role!: RoleEnum;
 	isActive!: boolean;
-	profileImages?: ProfileImage[];
+	profileImages?: ProfileImage;
 	deletedAt?: Date;
 	createdAt!: Date;
 }

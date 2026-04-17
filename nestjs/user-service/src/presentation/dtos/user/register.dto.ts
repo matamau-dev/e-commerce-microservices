@@ -19,7 +19,7 @@ export class RegisterDto {
 
 	@ApiProperty({
 		description: 'El correo electrónico es obligatorio.',
-		example: 'juan@example.com',
+		example: 'usuario@ejemplo.com',
 	})
 	@IsEmail()
 	@IsNotEmpty()

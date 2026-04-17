@@ -54,3 +54,7 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Uploads (si es que se suben a la raíz, lo cual no es recomendable)
+uploads/profile-images/*
+!uploads/profile-images/.gitkeep

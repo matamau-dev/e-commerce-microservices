@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as path from 'path';
+import { promises as fs } from 'fs';
 
 @Injectable()
 export class LocalStorageService {
@@ -11,7 +12,17 @@ export class LocalStorageService {
 	}
 
 	getPublicUrl(fileName: string, folder: string): string {
-		const baseUrl = this.configService.get('image.url');
-		return `${baseUrl}/api/v1/users/profile-image/${folder}/${fileName}`;
+		const baseUrl = this.configService.get('image.profile');
+		return `${baseUrl}/${folder}/${fileName}`;
+	}
+
+	async deleteFile(fileName: string, folder: string): Promise<void> {
+		const filePath = path.join(process.cwd(), 'uploads', folder, fileName);
+
+		try {
+			await fs.unlink(filePath);
+		} catch (error) {
+			console.error('Error al eliminar archivo:', error);
+		}
 	}
 }

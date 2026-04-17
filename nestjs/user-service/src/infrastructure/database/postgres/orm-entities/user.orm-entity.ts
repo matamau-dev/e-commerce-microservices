@@ -33,12 +33,12 @@ export class UserOrmEntity {
 	@Column({ default: true })
 	is_active!: boolean;
 
-	@Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.COMPRADOR })
+	@Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.CLIENTE })
 	role!: RoleEnum;
 
 	@OneToOne(() => FilesOrmEntity, (profile) => profile.user)
 	@JoinColumn({ name: 'profile_id' })
-	profileImages!: FilesOrmEntity[];
+	profileImages!: FilesOrmEntity;
 
 	@CreateDateColumn({
 		type: 'timestamp',

@@ -26,7 +26,7 @@ export const getTypeOrmConfig = (
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 
-	synchronize: false,
+	synchronize: true,
 });
 
 export const AppDataSource = new DataSource({

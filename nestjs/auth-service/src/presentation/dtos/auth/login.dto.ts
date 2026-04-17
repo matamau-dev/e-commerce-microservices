@@ -11,15 +11,15 @@ export class LoginDto {
 		example: 'usuario@ejemplo.com',
 	})
 	@IsEmail({}, { message: 'Debe ser un correo electrónico válido' })
-	email: string;
+	email!: string;
 
 	@ApiProperty({
 		description: 'Contraseña del usuario',
-		example: 'MiContraseña123!',
+		example: 'Password123',
 	})
 	@IsString({ message: 'La contraseña debe ser una cadena de texto' })
 	@IsNotEmpty({ message: 'La contraseña es requerida' })
-	password: string;
+	password!: string;
 
 	@ApiProperty({
 		description:
@@ -28,7 +28,7 @@ export class LoginDto {
 	})
 	@IsString({ message: 'DeviceInfo debe ser una cadena de texto' })
 	@IsNotEmpty({ message: 'DeviceInfo es requerido' })
-	deviceInfo: string;
+	deviceInfo!: string;
 
 	@ApiProperty({
 		description: 'Dirección IP del usuario',
@@ -36,5 +36,5 @@ export class LoginDto {
 	})
 	@IsString({ message: 'IP Address debe ser una cadena de texto' })
 	@IsNotEmpty({ message: 'IP Address es requerido' })
-	ipAddress: string;
+	ipAddress!: string;
 }

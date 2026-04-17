@@ -28,6 +28,8 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
+import { Auth } from '../decorators/auth.decorator';
+import { RoleEnum } from 'src/domain/enums/role.enum';
 
 @ApiTags('Users')
 @Controller('users')
@@ -54,9 +56,10 @@ export class UserController {
 		});
 	}
 
-	@ApiBearerAuth()
 	@Get('profile') // ← sin :id en la URL
 	@UseGuards(JwtAuthGuard) // ← protege la ruta
+	@Auth(RoleEnum.CLIENTE)
+	@ApiBearerAuth()
 	@ApiOperation({ summary: 'Obtener perfil de usuario' })
 	@ApiResponse({ status: 200 })
 	getProfiles(@CurrentUser('id') userId: string) {
@@ -73,15 +76,14 @@ export class UserController {
 		return this.findEmail.execute({ email });
 	}
 
-	@Patch('profile/:id')
+	@Patch('profile')
+	@UseGuards(JwtAuthGuard) // ← protege la ruta
+	@Auth(RoleEnum.CLIENTE)
+	@ApiBearerAuth()
 	@ApiOperation({ summary: 'Actualizar perfil de usuario' })
-	@ApiParam({ name: 'id', type: 'string', format: 'uuid' })
 	@ApiBody({ type: UpdateProfileDto })
 	@ApiResponse({ status: 200, description: 'Perfil actualizado' })
-	update(
-		@Param('id', ParseUUIDPipe) id: string,
-		@Body() dto: UpdateProfileDto,
-	) {
+	update(@CurrentUser('id') id: string, @Body() dto: UpdateProfileDto) {
 		return this.updateProfile.execute({
 			userId: id,
 			name: dto.name,
@@ -89,13 +91,15 @@ export class UserController {
 		});
 	}
 
-	@Patch('password/:id')
+	@Patch('password')
+	@UseGuards(JwtAuthGuard) // ← protege la ruta
+	@Auth(RoleEnum.CLIENTE)
+	@ApiBearerAuth()
 	@ApiOperation({ summary: 'Actualizar contraseña' })
-	@ApiParam({ name: 'id', type: 'string', format: 'uuid' })
 	@ApiBody({ type: UpdatePasswordDto })
 	@ApiResponse({ status: 200, description: 'Contraseña actualizada' })
 	updatePasswords(
-		@Param('id', ParseUUIDPipe) id: string,
+		@CurrentUser('id') id: string,
 		@Body() dto: UpdatePasswordDto,
 	) {
 		return this.updatePassword.execute({
@@ -105,19 +109,18 @@ export class UserController {
 		});
 	}
 
-	@Delete(':id')
+	@Delete()
+	@UseGuards(JwtAuthGuard) // ← protege la ruta
+	@Auth(RoleEnum.CLIENTE)
+	@ApiBearerAuth()
 	@ApiOperation({ summary: 'Eliminar cuenta de usuario' })
-	@ApiParam({ name: 'id', type: 'string', format: 'uuid' })
 	@ApiBody({
 		schema: {
 			example: { password: '12345678' },
 		},
 	})
 	@ApiResponse({ status: 200, description: 'Cuenta eliminada' })
-	delete(
-		@Param('id', ParseUUIDPipe) id: string,
-		@Body('password') password: string,
-	) {
+	delete(@CurrentUser('id') id: string, @Body('password') password: string) {
 		return this.deleteAccount.execute({ userId: id, password });
 	}
 }

@@ -22,7 +22,7 @@ export interface EnvVars {
 	JWT_PUBLIC_KEY_PATH: string;
 
 	// IMAGE
-	URL_IMAGE: string;
+	URL_IMAGE_PROFILE: string;
 }
 
 export const envValidationSchema = Joi.object({
@@ -49,5 +49,5 @@ export const envValidationSchema = Joi.object({
 	JWT_PUBLIC_KEY_PATH: Joi.string().required(),
 
 	// IMAGE
-	URL_IMAGE: Joi.string().uri().required(),
+	URL_IMAGE_PROFILE: Joi.string().uri().required(),
 }).unknown(true);

@@ -25,7 +25,7 @@ export const envConfig = () => {
 			publicKeyPath: env.JWT_PUBLIC_KEY_PATH,
 		},
 		image: {
-			url: env.URL_IMAGE,
+			profile: env.URL_IMAGE_PROFILE,
 		},
 	};
 };

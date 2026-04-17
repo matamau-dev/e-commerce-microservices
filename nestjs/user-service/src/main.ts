@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { promises as fs } from 'fs';
+import * as path from 'path';
 import { DomainExceptionFilter } from './presentation/filters/domain-exception.filter';
 
 async function bootstrap() {
+	await ensureUploadDirs();
 	const logger = new Logger('API USER-SERVICE');
 	const app = await NestFactory.create(AppModule);
 	app.useGlobalPipes(
@@ -46,5 +49,15 @@ async function bootstrap() {
 	logger.verbose(
 		`The Documentation is available at http://localhost:${process.env.PORTS ?? 3000}/api/v1/docs`,
 	);
+}
+
+async function ensureUploadDirs() {
+	const dir = path.join(process.cwd(), 'uploads', 'profile-images');
+
+	try {
+		await fs.mkdir(dir, { recursive: true });
+	} catch (error) {
+		console.error('Error creando directorio uploads:', error);
+	}
 }
 bootstrap();

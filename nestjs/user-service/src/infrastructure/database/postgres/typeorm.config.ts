@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { UserOrmEntity } from './orm-entities/user.orm-entity';
+import { FilesOrmEntity } from './orm-entities/file.orm-entity';
 
 export const getTypeOrmConfig = (
 	configService: ConfigService,
@@ -14,11 +15,11 @@ export const getTypeOrmConfig = (
 	password: configService.get('database.password'),
 	database: configService.get('database.name'),
 
-	entities: [UserOrmEntity],
+	entities: [UserOrmEntity, FilesOrmEntity],
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 
-	synchronize: false,
+	synchronize: true,
 });
 
 export const AppDataSource = new DataSource({
@@ -29,7 +30,7 @@ export const AppDataSource = new DataSource({
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_BASE,
 
-	entities: [UserOrmEntity],
+	entities: [UserOrmEntity, FilesOrmEntity],
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 
