@@ -16,7 +16,9 @@ export class FilePgRepository
 	) {}
 
 	async findByUserId(userId: string): Promise<ProfileImage | null> {
-		const found = await this.fileRepository.findOne({ where: { userId } });
+		const found = await this.fileRepository.findOne({
+			where: { user: { id: userId } },
+		});
 		return found ? this.toDomain(found) : null;
 	}
 
@@ -31,7 +33,9 @@ export class FilePgRepository
 	}
 
 	deleteByUserId(userId: string): Promise<void> {
-		return this.fileRepository.delete({ userId }).then(() => undefined);
+		return this.fileRepository
+			.delete({ user: { id: userId } })
+			.then(() => undefined);
 	}
 
 	private toDomain(orm: FilesOrmEntity): ProfileImage {

@@ -32,7 +32,7 @@ async function bootstrap() {
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('api/v1/docs', app, document);
+	SwaggerModule.setup('user/api/v1/docs', app, document);
 
 	app.enableCors({
 		origin: '*', // Cambiar por el dominio del frontend en producción
@@ -43,11 +43,11 @@ async function bootstrap() {
 	await app.listen(process.env.PORTS ?? 3000);
 
 	logger.log(
-		`The API is available at http://localhost:${process.env.PORTS ?? 3000}/api/v1`,
+		`The API is available at http://localhost:${process.env.PORTS ?? 3000}/user/api/v1`,
 	);
 
 	logger.verbose(
-		`The Documentation is available at http://localhost:${process.env.PORTS ?? 3000}/api/v1/docs`,
+		`The Documentation is available at http://localhost:${process.env.PORTS ?? 3000}/user/api/v1/docs`,
 	);
 }
 

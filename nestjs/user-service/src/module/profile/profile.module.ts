@@ -4,12 +4,13 @@ import { DeleteProfileImageUseCase } from 'src/application/use-cases/profile-ima
 import { GetProfileImageUseCase } from 'src/application/use-cases/profile-image/get-profile-image/get-profile-image.use-case';
 import { UploadProfileImageUseCase } from 'src/application/use-cases/profile-image/upload-profile-image/upload-profile-image.use-case';
 import { FilesOrmEntity } from 'src/infrastructure/database/postgres/orm-entities/file.orm-entity';
+import { UserOrmEntity } from 'src/infrastructure/database/postgres/orm-entities/user.orm-entity';
 import { FilePgRepository } from 'src/infrastructure/database/postgres/repositories/file.pg-repository';
 import { LocalStorageService } from 'src/infrastructure/storage/local-storage.service';
 import { ProfileImageController } from 'src/presentation/controllers/profile-image.controller';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([FilesOrmEntity])],
+	imports: [TypeOrmModule.forFeature([FilesOrmEntity, UserOrmEntity])],
 	controllers: [ProfileImageController],
 	providers: [
 		{ provide: 'ProfileImageReader', useClass: FilePgRepository },

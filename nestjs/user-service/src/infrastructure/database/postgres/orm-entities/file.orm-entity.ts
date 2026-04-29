@@ -1,7 +1,7 @@
 // infrastructure/database/postgres/orm-entities/profile-image.orm-entity.ts
 import {
 	Entity,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 	Column,
 	CreateDateColumn,
 	ManyToOne,
@@ -12,7 +12,7 @@ import { UserOrmEntity } from './user.orm-entity';
 
 @Entity('files')
 export class FilesOrmEntity {
-	@PrimaryGeneratedColumn('uuid')
+	@PrimaryColumn('uuid')
 	id!: string;
 
 	@Column()
@@ -24,10 +24,11 @@ export class FilesOrmEntity {
 	@Column({ name: 'type_file' })
 	typeFile!: string;
 
-	@Column({ name: 'user_id' })
-	userId!: string;
+	@Column({ type: 'uuid', name: 'user_id' })
+	userId;
 
 	@OneToOne(() => UserOrmEntity, (user) => user.profileImages)
+	@JoinColumn({ name: 'user_id' })
 	user!: UserOrmEntity;
 
 	@CreateDateColumn({ name: 'created_at' })

@@ -7,8 +7,9 @@ import {
 } from 'src/domain/repositories/user/user.repository';
 import { UserOrmEntity } from '../orm-entities/user.orm-entity';
 import { Repository } from 'typeorm';
-import { Email } from 'src/domain/value-objects/email.value-object';
-import { Phone } from 'src/domain/value-objects/phone.value-object';
+
+import { PhoneNumber } from 'src/domain/value-objects/utils/phone.value-object';
+import { Email } from 'src/domain/value-objects/user/email.value-object';
 
 export class UserPgRepository
 	implements UserReader, UserWriter, UserVerification
@@ -19,13 +20,25 @@ export class UserPgRepository
 	) {}
 
 	async findById(id: string): Promise<User | null> {
-		const found = await this.orm.findOne({ where: { id } });
+		const found = await this.orm.findOne({
+			where: { id },
+			relations: { profileImages: true },
+			select: {},
+		});
 		return found ? this.toDomain(found) : null;
 	}
 
 	async findByEmail(email: string): Promise<User | null> {
-		const found = await this.orm.findOne({ where: { email } });
-
+		const found = await this.orm.findOne({
+			where: { email },
+			select: {
+				id: true,
+				email: true,
+				password: true,
+				role: true,
+				isActive: true,
+			},
+		});
 		return found ? this.toDomain(found) : null;
 	}
 
@@ -62,18 +75,19 @@ export class UserPgRepository
 		return await this.orm.existsBy({ phone });
 	}
 
-	// ORM Entity → Domain Entity
 	private toDomain(orm: UserOrmEntity): User {
 		const user = new User();
 		user.id = orm.id;
 		user.name = orm.name;
 		user.email = new Email(orm.email);
-		user.phone = new Phone(orm.phone);
+		user.phone = new PhoneNumber(orm.phone);
 		user.role = orm.role;
 		user.password = orm.password;
-		user.isActive = orm.is_active;
-		user.createdAt = orm.created_at;
-		user.deletedAt = orm.deleted_at;
+		user.isActive = orm.isActive;
+		user.createdAt = orm.createdAt;
+		user.deletedAt = orm.deletedAt;
+		user.profileImages = orm.profileImages;
+
 		return user;
 	}
 
@@ -85,8 +99,8 @@ export class UserPgRepository
 			phone: user.phone.getValue(),
 			password: user.password,
 			role: user.role,
-			is_active: user.isActive,
-			deleted_at: user.deletedAt,
+			isActive: user.isActive,
+			deletedAt: user.deletedAt,
 		};
 	}
 }

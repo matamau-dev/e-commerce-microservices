@@ -6,10 +6,11 @@ import { HashService } from 'src/domain/services/hash.service';
 import { UpdateEmailOutput } from './update-email.output';
 import { UpdateEmailInput } from './update-email.input';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';
-import { Email } from 'src/domain/value-objects/email.value-object';
+
 import { UserVerification } from '../../../../domain/repositories/user/user.repository';
 import { EmailAlreadyExistsException } from 'src/domain/exceptions/user/email-already-exists.exception';
 import { InvalidPasswordException } from 'src/domain/exceptions/user/invalid-password.exception';
+import { Email } from 'src/domain/value-objects/user/email.value-object';
 
 export class UpdateEmailUseCase {
 	constructor(

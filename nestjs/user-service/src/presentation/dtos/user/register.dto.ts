@@ -26,11 +26,13 @@ export class RegisterDto {
 	email!: string;
 
 	@ApiProperty({
-		description: 'El número de teléfono debe tener 10 dígitos.',
-		example: '1234567890',
+		description: 'Número de teléfono mexicano de 10 dígitos',
+		example: '9611234567',
 	})
-	@IsString()
 	@IsNotEmpty()
+	@Matches(/^\d{10}$/, {
+		message: 'El teléfono debe tener exactamente 10 dígitos numéricos',
+	})
 	phone!: string;
 
 	@ApiProperty({

@@ -24,13 +24,8 @@ export class UserServiceClient {
 
 	async findByEmail(email: string): Promise<UserResponse | null> {
 		try {
-			console.log("Entro a el get de mi user y el email es", email)
 			const url = `${this.baseUrl}/api/v1/users/email/${email}`;
-			console.log("La url es", url)
-			const { data } = await firstValueFrom(
-				this.httpService.get(url),
-			);
-			console.log("Salgo del get de mi user", data);
+			const { data } = await firstValueFrom(this.httpService.get(url));
 			return data;
 		} catch {
 			return null;

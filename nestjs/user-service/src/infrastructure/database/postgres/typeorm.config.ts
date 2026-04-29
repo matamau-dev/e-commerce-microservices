@@ -4,6 +4,10 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { UserOrmEntity } from './orm-entities/user.orm-entity';
 import { FilesOrmEntity } from './orm-entities/file.orm-entity';
+import { AddressOrmEntity } from './orm-entities/address.orm-entity';
+import { WishlistOrmEntity } from './orm-entities/whislist/wishlist.orm-entity';
+import { WishlistItemOrmEntity } from './orm-entities/whislist/wishlist-item.orm-entity';
+import { WishlistShareOrmEntity } from './orm-entities/whislist/wishlist-share.orm-entity';
 
 export const getTypeOrmConfig = (
 	configService: ConfigService,
@@ -15,11 +19,19 @@ export const getTypeOrmConfig = (
 	password: configService.get('database.password'),
 	database: configService.get('database.name'),
 
-	entities: [UserOrmEntity, FilesOrmEntity],
+	entities: [
+		UserOrmEntity,
+		FilesOrmEntity,
+		AddressOrmEntity,
+		WishlistOrmEntity,
+		WishlistItemOrmEntity,
+		WishlistShareOrmEntity,
+	],
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 
 	synchronize: true,
+	dropSchema: false,
 });
 
 export const AppDataSource = new DataSource({
@@ -30,9 +42,16 @@ export const AppDataSource = new DataSource({
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_BASE,
 
-	entities: [UserOrmEntity, FilesOrmEntity],
+	entities: [
+		UserOrmEntity,
+		FilesOrmEntity,
+		AddressOrmEntity,
+		WishlistOrmEntity,
+		WishlistItemOrmEntity,
+		WishlistShareOrmEntity,
+	],
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 
 	synchronize: false,
-} as DataSourceOptions);
+} as DataSourceOptions); //360153d2-db91-49d2-9742-2aacef808f08

@@ -6,10 +6,10 @@ import { RegisterClientInput } from './register-client.input';
 import { RegisterClientOutput } from './register-client.output';
 import { User } from 'src/domain/entities/user/user.entity';
 import { HashService } from 'src/domain/services/hash.service';
-import { Email } from 'src/domain/value-objects/email.value-object';
-import { Phone } from 'src/domain/value-objects/phone.value-object';
+import { PhoneNumber } from 'src/domain/value-objects/utils/phone.value-object';
 import { EmailAlreadyExistsException } from 'src/domain/exceptions/user/email-already-exists.exception';
 import { PhoneAlreadyExistsException } from 'src/domain/exceptions/user/phone-already-exists.exception';
+import { Email } from 'src/domain/value-objects/user/email.value-object';
 export class RegisterClientUseCase {
 	constructor(
 		private readonly userWriter: UserWriter,
@@ -19,7 +19,7 @@ export class RegisterClientUseCase {
 
 	async execute(input: RegisterClientInput): Promise<RegisterClientOutput> {
 		const email = new Email(input.email);
-		const phone = new Phone(input.phone);
+		const phone = new PhoneNumber(input.phone);
 		const existsEmail = await this.userVerification.existByEmail(
 			email.getValue(),
 		);

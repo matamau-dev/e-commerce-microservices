@@ -1,59 +1,79 @@
 import { RoleEnum } from '../../../../domain/enums/role.enum';
-
 import {
 	Column,
 	CreateDateColumn,
 	DeleteDateColumn,
 	Entity,
+	Index,
 	JoinColumn,
+	ManyToOne,
 	OneToMany,
 	OneToOne,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import { FilesOrmEntity } from './file.orm-entity';
+import { AddressOrmEntity } from './address.orm-entity';
+import { WishlistOrmEntity } from './whislist/wishlist.orm-entity';
 
 @Entity('users')
+@Index(['email'])
+@Index(['phone'])
+@Index(['role'])
+@Index(['isActive'])
+@Index(['createdAt'])
 export class UserOrmEntity {
-	@PrimaryGeneratedColumn('uuid')
+	@PrimaryColumn('uuid')
 	id!: string;
 
 	@Column({ length: 100 })
 	name!: string;
 
-	@Column({ unique: true, length: 150 })
+	@Column({ length: 150 })
 	email!: string;
 
-	@Column({ unique: true, length: 150 })
+	@Column({ length: 20 })
 	phone!: string;
 
-	@Column()
+	@Column({ select: false })
 	password!: string;
 
-	@Column({ default: true })
-	is_active!: boolean;
+	@Column({ name: 'is_active', default: true })
+	isActive!: boolean;
 
-	@Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.CLIENTE })
+	@Column({
+		type: 'enum',
+		enum: RoleEnum,
+		default: RoleEnum.CLIENTE,
+	})
 	role!: RoleEnum;
 
-	@OneToOne(() => FilesOrmEntity, (profile) => profile.user)
-	@JoinColumn({ name: 'profile_id' })
-	profileImages!: FilesOrmEntity;
+	@OneToOne(() => FilesOrmEntity, (profile) => profile.user, {
+		onDelete: 'SET NULL',
+	})
+	profileImages?: FilesOrmEntity;
+
+	@OneToMany(() => AddressOrmEntity, (address) => address.user)
+	addresses!: AddressOrmEntity[];
 
 	@CreateDateColumn({
+		name: 'created_at',
 		type: 'timestamp',
 		default: () => 'CURRENT_TIMESTAMP',
-		select: true,
 	})
-	created_at!: Date;
+	createdAt!: Date;
 
 	@UpdateDateColumn({
+		name: 'updated_at',
 		type: 'timestamp',
 		default: () => 'CURRENT_TIMESTAMP',
-		select: false,
 	})
-	updated_at!: Date;
+	updatedAt!: Date;
 
-	@DeleteDateColumn({ type: 'timestamp', nullable: true, select: false })
-	deleted_at?: Date;
+	@DeleteDateColumn({
+		name: 'deleted_at',
+		type: 'timestamp',
+		nullable: true,
+	})
+	deletedAt?: Date;
 }

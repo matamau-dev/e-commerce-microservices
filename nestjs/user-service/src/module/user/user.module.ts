@@ -11,6 +11,7 @@ import { UserOrmEntity } from 'src/infrastructure/database/postgres/orm-entities
 import { UserPgRepository } from 'src/infrastructure/database/postgres/repositories/user.pg-repository';
 import { JwtStrategy } from 'src/infrastructure/jwt/jwt.strategy';
 import { Argon2Service } from 'src/infrastructure/services/argon2.service';
+import { LocalStorageService } from 'src/infrastructure/storage/local-storage.service';
 import { UserController } from 'src/presentation/controllers/user.controller';
 
 @Module({
@@ -37,6 +38,8 @@ import { UserController } from 'src/presentation/controllers/user.controller';
 			provide: 'HashService',
 			useClass: Argon2Service,
 		},
+		{ provide: 'LocalStorageService', useClass: LocalStorageService },
+
 		{
 			provide: RegisterClientUseCase,
 			useFactory: (userWriter, userVerification, hashService) =>
@@ -49,8 +52,9 @@ import { UserController } from 'src/presentation/controllers/user.controller';
 		},
 		{
 			provide: GetProfileUseCase,
-			useFactory: (userReader) => new GetProfileUseCase(userReader),
-			inject: ['UserReader'],
+			useFactory: (userReader, localStorageService) =>
+				new GetProfileUseCase(userReader, localStorageService),
+			inject: ['UserReader', 'LocalStorageService'],
 		},
 		{
 			provide: FindEmailUseCase,

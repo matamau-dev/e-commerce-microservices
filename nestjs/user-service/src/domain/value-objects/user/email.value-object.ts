@@ -1,4 +1,4 @@
-import { ValidationException } from '../exceptions/validation.exception';
+import { ValidationException } from 'src/domain/exceptions/validation.exception';
 
 export class Email {
 	private readonly value: string;
