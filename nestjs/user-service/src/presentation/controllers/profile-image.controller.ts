@@ -81,15 +81,12 @@ export class ProfileImageController {
 		});
 	}
 
-	// Obtener imagen — ruta pública, Flutter la usa en un Image.network()
 	@Get(':folder/:fileName')
 	getImage(
 		@Param('fileName') fileName: string,
 		@Param('folder') folder: string,
 		@Res() res: Response,
 	) {
-		console.log(`Entro al folder ${folder}`);
-		console.log(`Con el nombre del archivo ${fileName}`);
 		const { absolutePath } = this.getProfileImage.execute({
 			fileName,
 			folder,

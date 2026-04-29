@@ -74,6 +74,20 @@ services:
         methods: [DELETE]
         strip_path: false
 
+      - name: profile-image
+        paths: ["/api/v1/users/profile-image"]
+        methods: [POST, GET, DELETE]
+        strip_path: false
+
+      - name: user-addresses
+        paths: ["/api/v1/users/addresses"]
+        methods: [GET, POST, PATCH, DELETE]
+        strip_path: false
+
+      - name: wishlists
+        paths: ["/api/v1/wishlists"]
+        methods: [GET, POST, DELETE]
+        strip_path: false
 # ── Plugins globales ───────────────────────────────────────
 plugins:
   - name: rate-limiting

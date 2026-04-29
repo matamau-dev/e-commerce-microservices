@@ -38,7 +38,7 @@ async function bootstrap() {
 	);
 
 	app.useGlobalFilters(new DomainExceptionFilter());
-	app.setGlobalPrefix('auth/api/v1');
+	app.setGlobalPrefix('api/v1');
 	const config = new DocumentBuilder()
 		.setTitle('API')
 		.setDescription('API for e-commerce')

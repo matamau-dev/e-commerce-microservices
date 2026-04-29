@@ -123,9 +123,9 @@ export class WishlistController {
 	@Post(':wishlistId/items')
 	@Auth(RoleEnum.CLIENTE)
 	@ApiOperation({ summary: 'Agregar producto a wishlist existente' })
-	@ApiParam({ name: 'id', example: 'uuid-wishlist-id' })
+	@ApiParam({ name: 'wishlistId', example: 'uuid-wishlist-id' })
 	addItem(
-		@Param('id', ParseUUIDPipe) id: string,
+		@Param('wishlistId', ParseUUIDPipe) id: string,
 		@Body() dto: AddWishlistItemDto,
 		@CurrentUser('id') userId: string,
 	) {

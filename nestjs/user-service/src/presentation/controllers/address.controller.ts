@@ -100,7 +100,7 @@ export class AddressController {
 		return this.softDeleteAddress.execute({ id, userId });
 	}
 
-	@Delete('admin/:id')
+	@Delete(':id/permanent')
 	@Auth(RoleEnum.SUPERVISOR)
 	@ApiOperation({ summary: 'Eliminar permanentemente una dirección (admin)' })
 	@ApiParam({

@@ -56,8 +56,8 @@ export class UserController {
 		});
 	}
 
-	@Get('profile') // ← sin :id en la URL
-	@UseGuards(JwtAuthGuard) // ← protege la ruta
+	@Get('profile')
+	@UseGuards(JwtAuthGuard)
 	@Auth(RoleEnum.CLIENTE)
 	@ApiBearerAuth()
 	@ApiOperation({ summary: 'Obtener perfil de usuario' })
