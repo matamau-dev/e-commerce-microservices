@@ -27,8 +27,7 @@ export class DeleteAccountUseCase {
 			user.password,
 		);
 		if (!validPassword) throw new InvalidPasswordException();
-
-		// Soft delete — solo marca deletedAt, no borra de la DB
+		user.softDelete();
 		const deletedAt = new Date();
 		await this.userWriter.softDelete(input.userId);
 

@@ -18,6 +18,7 @@
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json",
+		"test:e2e:watch": "jest --config ./test/jest-e2e.json --runInBand",
 		"migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/infrastructure/database/postgres/typeorm.config.ts",
 		"migration:run": "typeorm-ts-node-commonjs migration:run -d src/infrastructure/database/postgres/typeorm.config.ts",
 		"migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/infrastructure/database/postgres/typeorm.config.ts",
@@ -51,9 +52,10 @@
 		"@eslint/js": "^9.18.0",
 		"@nestjs/cli": "^11.0.0",
 		"@nestjs/schematics": "^11.0.0",
-		"@nestjs/testing": "^11.0.1",
+		"@nestjs/testing": "^11.1.24",
 		"@types/express": "^5.0.0",
 		"@types/jest": "^30.0.0",
+		"@types/mocha": "^10.0.10",
 		"@types/multer": "^2.1.0",
 		"@types/node": "^22.10.7",
 		"@types/passport-local": "^1.0.38",
@@ -62,11 +64,11 @@
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-prettier": "^5.2.2",
 		"globals": "^16.0.0",
-		"jest": "^30.0.0",
+		"jest": "^30.4.2",
 		"prettier": "^3.4.2",
 		"source-map-support": "^0.5.21",
 		"supertest": "^7.0.0",
-		"ts-jest": "^29.2.5",
+		"ts-jest": "^29.4.9",
 		"ts-loader": "^9.5.2",
 		"ts-node": "^10.9.2",
 		"tsconfig-paths": "^4.2.0",
@@ -79,15 +81,21 @@
 			"json",
 			"ts"
 		],
-		"rootDir": "src",
+		"rootDir": ".",
 		"testRegex": ".*\\.spec\\.ts$",
 		"transform": {
 			"^.+\\.(t|j)s$": "ts-jest"
 		},
 		"collectCoverageFrom": [
-			"**/*.(t|j)s"
+			"src/**/*.(t|j)s",
+			"!src/main.ts",
+			"!src/**/*.module.ts"
 		],
-		"coverageDirectory": "../coverage",
-		"testEnvironment": "node"
+		"coverageDirectory": "./coverage",
+		"testEnvironment": "node",
+		"moduleNameMapper": {
+			"^src/(.*)$": "<rootDir>/src/$1",
+			"^test/(.*)$": "<rootDir>/test/$1"
+		}
 	}
 }

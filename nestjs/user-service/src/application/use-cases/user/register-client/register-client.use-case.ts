@@ -10,6 +10,7 @@ import { PhoneNumber } from 'src/domain/value-objects/utils/phone.value-object';
 import { EmailAlreadyExistsException } from 'src/domain/exceptions/user/email-already-exists.exception';
 import { PhoneAlreadyExistsException } from 'src/domain/exceptions/user/phone-already-exists.exception';
 import { Email } from 'src/domain/value-objects/user/email.value-object';
+import { RoleEnum } from 'src/domain/enums/role.enum';
 export class RegisterClientUseCase {
 	constructor(
 		private readonly userWriter: UserWriter,
@@ -32,14 +33,16 @@ export class RegisterClientUseCase {
 
 		const hashedPassword = await this.hashService.hash(input.password);
 
-		const user = new User();
-		user.id = crypto.randomUUID();
-		user.name = input.name.trim();
-		user.email = email;
-		user.phone = phone;
-		user.password = hashedPassword;
-		user.isActive = false;
-		user.createdAt = new Date();
+		const user = User.create({
+			name: input.name,
+			email: email,
+			phone: phone,
+			password: hashedPassword,
+			role: RoleEnum.CLIENTE,
+			isActive: false,
+			addresses: [],
+			profileImages: undefined,
+		});
 
 		await this.userWriter.create(user);
 

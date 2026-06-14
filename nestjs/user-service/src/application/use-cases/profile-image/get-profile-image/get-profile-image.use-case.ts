@@ -10,6 +10,9 @@ export class GetProfileImageUseCase {
 			input.fileName,
 			input.folder,
 		);
-		return { absolutePath };
+
+		return {
+			absolutePath,
+		};
 	}
 }

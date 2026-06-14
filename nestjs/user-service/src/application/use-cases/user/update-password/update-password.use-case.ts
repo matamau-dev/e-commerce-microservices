@@ -34,7 +34,9 @@ export class UpdatePasswordUseCase {
 		);
 		if (samePassword) throw new SamePasswordException();
 
-		user.password = await this.hashService.hash(input.newPassword);
+		const newHash = await this.hashService.hash(input.newPassword);
+
+		user.changePassword(newHash);
 
 		await this.userWriter.update(user);
 

@@ -38,12 +38,17 @@ import { ProfileImageController } from 'src/presentation/controllers/profile-ima
 		},
 		{
 			provide: DeleteProfileImageUseCase,
-			useFactory: (profileReader, localStorageService) =>
+			useFactory: (profileReader, profileWriter, localStorageService) =>
 				new DeleteProfileImageUseCase(
 					profileReader,
+					profileWriter,
 					localStorageService,
 				),
-			inject: ['ProfileImageReader', 'LocalStorageService'],
+			inject: [
+				'ProfileImageReader',
+				'ProfileImageWriter',
+				'LocalStorageService',
+			],
 		},
 	],
 })

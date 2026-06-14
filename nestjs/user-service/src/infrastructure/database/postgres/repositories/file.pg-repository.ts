@@ -6,6 +6,7 @@ import {
 import { FilesOrmEntity } from '../orm-entities/file.orm-entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FileMapper } from 'src/infrastructure/mappers/file.mapper';
 
 export class FilePgRepository
 	implements ProfileImageReader, ProfileImageWriter
@@ -19,44 +20,26 @@ export class FilePgRepository
 		const found = await this.fileRepository.findOne({
 			where: { user: { id: userId } },
 		});
-		return found ? this.toDomain(found) : null;
+		return found ? FileMapper.FileOrmToFileDomain(found) : null;
 	}
 
 	async save(image: ProfileImage): Promise<ProfileImage> {
-		const saved = await this.fileRepository.save(this.toOrm(image));
-		return this.toDomain(saved);
+		const saved = await this.fileRepository.save(
+			FileMapper.FileDomainToFileOrm(image),
+		);
+		return FileMapper.FileOrmToFileDomain(saved);
 	}
 
 	async update(image: ProfileImage): Promise<ProfileImage> {
-		const updated = await this.fileRepository.save(this.toOrm(image));
-		return this.toDomain(updated);
+		const updated = await this.fileRepository.save(
+			FileMapper.FileDomainToFileOrm(image),
+		);
+		return FileMapper.FileOrmToFileDomain(updated);
 	}
 
 	deleteByUserId(userId: string): Promise<void> {
 		return this.fileRepository
 			.delete({ user: { id: userId } })
 			.then(() => undefined);
-	}
-
-	private toDomain(orm: FilesOrmEntity): ProfileImage {
-		const domain = new ProfileImage();
-		domain.id = orm.id;
-		domain.url = orm.url;
-		domain.nameOriginal = orm.nameOriginal;
-		domain.typeFile = orm.typeFile;
-		domain.userId = orm.userId;
-		domain.createdAt = orm.createdAt;
-		return domain;
-	}
-
-	private toOrm(domain: ProfileImage): FilesOrmEntity {
-		const orm = new FilesOrmEntity();
-		orm.id = domain.id;
-		orm.url = domain.url;
-		orm.nameOriginal = domain.nameOriginal;
-		orm.typeFile = domain.typeFile;
-		orm.userId = domain.userId;
-		orm.createdAt = domain.createdAt;
-		return orm;
 	}
 }

@@ -10,6 +10,7 @@ import { AddressOrmEntity } from '../orm-entities/address.orm-entity';
 import { Repository } from 'typeorm';
 import { TypeormCursorPagination } from 'src/infrastructure/pagination/typeorm-cursor.pagination';
 import { Location } from 'src/domain/entities/address/location.entity';
+import { AddressMapper } from 'src/infrastructure/mappers/address.maper';
 
 export class AddressPgRepository implements AddressReader, AddressWriter {
 	constructor(
@@ -35,23 +36,29 @@ export class AddressPgRepository implements AddressReader, AddressWriter {
 		);
 		return {
 			...result,
-			data: result.data.map((a) => this.toDomain(a)),
+			data: result.data.map((a) =>
+				AddressMapper.AddressORMtoAddressDomain(a),
+			),
 		};
 	}
 
 	async findById(id: string): Promise<Address | null> {
 		const found = await this.orm.findOne({ where: { id } });
-		return found ? this.toDomain(found) : null;
+		return found ? AddressMapper.AddressORMtoAddressDomain(found) : null;
 	}
 
 	async create(address: Address): Promise<Address> {
-		const saved = await this.orm.save(this.toOrm(address));
-		return this.toDomain(saved);
+		const saved = await this.orm.save(
+			AddressMapper.AddressDomainToAddressORM(address),
+		);
+		return AddressMapper.AddressORMtoAddressDomain(saved);
 	}
 
 	async update(address: Address): Promise<Address | null> {
-		const update = await this.orm.save(this.toOrm(address));
-		return update ? this.toDomain(update) : null;
+		const update = await this.orm.save(
+			AddressMapper.AddressDomainToAddressORM(address),
+		);
+		return update ? AddressMapper.AddressORMtoAddressDomain(update) : null;
 	}
 
 	async softDelete(id: string): Promise<string> {
@@ -69,7 +76,7 @@ export class AddressPgRepository implements AddressReader, AddressWriter {
 			where: { userId },
 		});
 
-		return addresses.map(this.toDomain);
+		return addresses.map(AddressMapper.AddressORMtoAddressDomain);
 	}
 
 	async findDefaultByUserId(userId: string): Promise<Address | null> {
@@ -80,7 +87,9 @@ export class AddressPgRepository implements AddressReader, AddressWriter {
 			},
 		});
 
-		return address ? this.toDomain(address) : null;
+		return address
+			? AddressMapper.AddressORMtoAddressDomain(address)
+			: null;
 	}
 
 	async clearDefaultByUserId(userId: string): Promise<void> {
@@ -88,47 +97,5 @@ export class AddressPgRepository implements AddressReader, AddressWriter {
 			{ userId, isDefault: true },
 			{ isDefault: false },
 		);
-	}
-
-	private toDomain(orm: AddressOrmEntity): Address {
-		return Address.fromPersistence({
-			id: orm.id,
-			fullName: orm.fullName,
-			phone: orm.phone,
-			location: Location.create({
-				street: orm.street,
-				externalNumber: orm.externalNumber,
-				neighborhood: orm.neighborhood,
-				city: orm.city,
-				state: orm.state,
-				postalCode: orm.postalCode,
-				internalNumber: orm.internalNumber,
-			}),
-			isDefault: orm.isDefault,
-			userId: orm.userId,
-			createdAt: orm.createdAt,
-			references: orm.referenceNotes,
-			updatedAt: orm.updatedAt,
-		});
-	}
-
-	private toOrm(address: Address): Partial<AddressOrmEntity> {
-		return {
-			id: address.id,
-			fullName: address.fullName,
-			phone: address.phone.getValue(),
-			street: address.location.street,
-			externalNumber: address.location.externalNumber,
-			neighborhood: address.location.neighborhood,
-			city: address.location.city,
-			state: address.location.state,
-			postalCode: address.location.postalCode.getValue(),
-			isDefault: address.isDefault,
-			userId: address.userId,
-			createdAt: address.createdAt,
-			internalNumber: address.location.internalNumber,
-			referenceNotes: address.references,
-			updatedAt: address.updatedAt,
-		};
 	}
 }

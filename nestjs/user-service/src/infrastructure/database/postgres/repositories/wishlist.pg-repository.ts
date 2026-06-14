@@ -12,6 +12,7 @@ import { TypeormCursorPagination } from 'src/infrastructure/pagination/typeorm-c
 import { WishlistItem } from 'src/domain/entities/wishlist-item/wishlist-item.entity';
 import { WishlistShare } from 'src/domain/entities/wishlist-share/whislist-share.entity';
 import { WishlistItemOrmEntity } from '../orm-entities/whislist/wishlist-item.orm-entity';
+import { WishListMapper } from 'src/infrastructure/mappers/wishlist.mapper';
 
 export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 	constructor(
@@ -64,7 +65,12 @@ export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 			'wishlist',
 			'created_at',
 		);
-		return { ...result, data: result.data.map((w) => this.toDomain(w)) };
+		return {
+			...result,
+			data: result.data.map((w) =>
+				WishListMapper.WishlistOrmToWishlistDomain(w),
+			),
+		};
 	}
 
 	async findById(id: string, userId: string): Promise<Wishlist | null> {
@@ -75,7 +81,7 @@ export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 				shares: true,
 			},
 		});
-		return found ? this.toDomain(found) : null;
+		return found ? WishListMapper.WishlistOrmToWishlistDomain(found) : null;
 	}
 
 	async findByNormalizeName(
@@ -85,7 +91,7 @@ export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 		const found = await this.orm.findOne({
 			where: { normalizedName, userId },
 		});
-		return found ? this.toDomain(found) : null;
+		return found ? WishListMapper.WishlistOrmToWishlistDomain(found) : null;
 	}
 
 	async findDefaultByUserId(userId: string): Promise<Wishlist | null> {
@@ -94,7 +100,7 @@ export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 			relations: { items: true, shares: true },
 		});
 
-		return found ? this.toDomain(found) : null;
+		return found ? WishListMapper.WishlistOrmToWishlistDomain(found) : null;
 	}
 
 	async findBestCandidate(
@@ -110,13 +116,15 @@ export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 			order: { updated_at: 'DESC' },
 		});
 
-		return found ? this.toDomain(found) : null;
+		return found ? WishListMapper.WishlistOrmToWishlistDomain(found) : null;
 	}
 
 	async save(wishlist: Wishlist): Promise<Wishlist> {
-		const saved = await this.orm.save(this.toOrm(wishlist));
+		const saved = await this.orm.save(
+			WishListMapper.WishlistDomainToWishlistOrm(wishlist),
+		);
 
-		return this.toDomain(saved);
+		return WishListMapper.WishlistOrmToWishlistDomain(saved);
 	}
 
 	async deleteAndPromoteCandidate(id: string, userId: string): Promise<void> {
@@ -162,62 +170,5 @@ export class WishlistPgRepository implements WishlistReader, WishlistWriter {
 			wishlistId,
 			productId,
 		});
-	}
-
-	private toDomain(orm: WishlistOrmEntity): Wishlist {
-		return Wishlist.fromPersistence({
-			id: orm.id,
-			name: orm.name,
-			isPrivate: orm.isPrivate,
-			isDefault: orm.isDefault,
-			userId: orm.userId,
-			items:
-				orm.items?.map((item) =>
-					WishlistItem.fromPersistence({
-						id: item.id,
-						wishlistId: item.wishlistId,
-						productId: item.productId,
-						createdAt: item.createdAt,
-					}),
-				) ?? [],
-			shares:
-				orm.shares?.map((share) =>
-					WishlistShare.fromPersistence({
-						id: share.id,
-						wishlistId: share.wishlistId,
-						sharedWithUserId: share.sharedWithUserId,
-						createdAt: share.createdAt,
-					}),
-				) ?? [],
-			createdAt: orm.created_at,
-			updatedAt: orm.updated_at,
-		});
-	}
-
-	private toOrm(wishlist: Wishlist): Partial<WishlistOrmEntity> {
-		return {
-			id: wishlist.id,
-			userId: wishlist.userId,
-			name: wishlist.name,
-			normalizedName: wishlist.normalizeName,
-			isPrivate: wishlist.isPrivate,
-			isDefault: wishlist.isDefault,
-			created_at: wishlist.createdAt,
-			updated_at: wishlist.updatedAt,
-
-			items: wishlist.items.map((item) => ({
-				id: item.id,
-				wishlistId: item.wishlistId,
-				productId: item.productId,
-				createdAt: item.createdAt,
-			})),
-
-			shares: wishlist.shares.map((share) => ({
-				id: share.id,
-				wishlistId: share.wishlistId,
-				sharedWithUserId: share.sharedWithUserId,
-				createdAt: share.createdAt,
-			})),
-		};
 	}
 }

@@ -18,7 +18,6 @@ export class RemoveItemUseCase {
 			input.id,
 			input.userId,
 		);
-		console.log('wishlist => ', wishlist);
 		if (!wishlist) throw new WishlistShareNotFoundException();
 		if (!wishlist.belongsTo(input.userId))
 			throw new UnauthorizedWishlistAccessException();

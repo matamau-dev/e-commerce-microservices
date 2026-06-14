@@ -1,5 +1,3 @@
-import { ValidationException } from '../../exceptions/validation.exception';
-
 export class PhoneNumber {
 	private readonly value: string;
 

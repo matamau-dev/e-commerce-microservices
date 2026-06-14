@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 
 import { PhoneNumber } from 'src/domain/value-objects/utils/phone.value-object';
 import { Email } from 'src/domain/value-objects/user/email.value-object';
+import { UserMapper } from 'src/infrastructure/mappers/user.maper';
 
 export class UserPgRepository
 	implements UserReader, UserWriter, UserVerification
@@ -25,7 +26,7 @@ export class UserPgRepository
 			relations: { profileImages: true },
 			select: {},
 		});
-		return found ? this.toDomain(found) : null;
+		return found ? UserMapper.UserOrmToUserDomain(found) : null;
 	}
 
 	async findByEmail(email: string): Promise<User | null> {
@@ -39,7 +40,7 @@ export class UserPgRepository
 				isActive: true,
 			},
 		});
-		return found ? this.toDomain(found) : null;
+		return found ? UserMapper.UserOrmToUserDomain(found) : null;
 	}
 
 	async existsByEmail(email: string): Promise<boolean> {
@@ -51,13 +52,15 @@ export class UserPgRepository
 	}
 
 	async create(user: User): Promise<User> {
-		const saved = await this.orm.save(this.toOrm(user));
-		return this.toDomain(saved);
+		const saved = await this.orm.save(UserMapper.UserDomainToUserORM(user));
+		return UserMapper.UserOrmToUserDomain(saved);
 	}
 
 	async update(user: User): Promise<User> {
-		const updated = await this.orm.save(this.toOrm(user));
-		return this.toDomain(updated);
+		const updated = await this.orm.save(
+			UserMapper.UserDomainToUserORM(user),
+		);
+		return UserMapper.UserOrmToUserDomain(updated);
 	}
 
 	async softDelete(id: string): Promise<void> {
@@ -73,34 +76,5 @@ export class UserPgRepository
 	}
 	async existByPhone(phone: string): Promise<boolean> {
 		return await this.orm.existsBy({ phone });
-	}
-
-	private toDomain(orm: UserOrmEntity): User {
-		const user = new User();
-		user.id = orm.id;
-		user.name = orm.name;
-		user.email = new Email(orm.email);
-		user.phone = new PhoneNumber(orm.phone);
-		user.role = orm.role;
-		user.password = orm.password;
-		user.isActive = orm.isActive;
-		user.createdAt = orm.createdAt;
-		user.deletedAt = orm.deletedAt;
-		user.profileImages = orm.profileImages;
-
-		return user;
-	}
-
-	private toOrm(user: User): Partial<UserOrmEntity> {
-		return {
-			id: user.id,
-			name: user.name,
-			email: user.email.getValue(),
-			phone: user.phone.getValue(),
-			password: user.password,
-			role: user.role,
-			isActive: user.isActive,
-			deletedAt: user.deletedAt,
-		};
 	}
 }

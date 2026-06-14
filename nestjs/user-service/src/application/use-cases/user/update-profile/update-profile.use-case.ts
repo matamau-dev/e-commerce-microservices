@@ -6,6 +6,7 @@ import { UpdateProfileInput } from './update-profile.input';
 import { UpdateProfileOutput } from './update-profile.output';
 import { UserNotFoundException } from 'src/domain/exceptions/user/user-not-found.exception';
 import { PhoneNumber } from 'src/domain/value-objects/utils/phone.value-object';
+import { SamePhoneException } from 'src/domain/exceptions/user/same-phone.exception';
 
 export class UpdateProfileUsecase {
 	constructor(
@@ -17,8 +18,13 @@ export class UpdateProfileUsecase {
 		const user = await this.userReader.findById(input.userId);
 		if (!user) throw new UserNotFoundException(input.userId);
 
-		if (input.name) user.name = input.name.trim();
-		if (input.phone) user.phone = new PhoneNumber(input.phone);
+		if (input.name) {
+			user.changeName(input.name);
+		}
+
+		if (input.phone) {
+			user.changePhone(new PhoneNumber(input.phone));
+		}
 
 		const updated = await this.userWriter.update(user);
 

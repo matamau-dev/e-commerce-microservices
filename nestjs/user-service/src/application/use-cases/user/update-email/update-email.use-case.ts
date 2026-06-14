@@ -15,7 +15,6 @@ import { Email } from 'src/domain/value-objects/user/email.value-object';
 export class UpdateEmailUseCase {
 	constructor(
 		private readonly userReader: UserReader,
-		private readonly userWriter: UserWriter,
 		private readonly userVerification: UserVerification,
 		private readonly hashService: HashService,
 		// private readonly publisher: EmailChangeRequestedPublisher,

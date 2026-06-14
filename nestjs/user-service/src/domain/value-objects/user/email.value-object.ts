@@ -1,26 +1,33 @@
 import { ValidationException } from 'src/domain/exceptions/validation.exception';
 
 export class Email {
-	private readonly value: string;
+	private readonly email: string;
 
 	constructor(email: string) {
-		if (!email?.trim()) {
+		this.email = email;
+	}
+
+	static create(input: string): Email {
+		const normalizedEmail = input?.trim().toLowerCase();
+
+		if (!normalizedEmail) {
 			throw new ValidationException('El email es requerido');
 		}
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(email)) {
-			throw new ValidationException(`El email ${email} no es válido`);
+
+		if (!emailRegex.test(normalizedEmail)) {
+			throw new ValidationException(`El email ${input} no es válido`);
 		}
 
-		this.value = email.toLowerCase().trim();
+		return new Email(normalizedEmail);
 	}
 
 	getValue(): string {
-		return this.value;
+		return this.email;
 	}
 
 	equals(other: Email): boolean {
-		return this.value === other.getValue();
+		return this.email === other.getValue();
 	}
 }

@@ -20,32 +20,28 @@ export class UploadProfileImageUseCase {
 		const existing = await this.profileImageReader.findByUserId(
 			input.userId,
 		);
+
 		if (existing) {
 			await this.localStorageService.deleteFile(
 				existing.url,
 				'profile-images',
 			);
+
 			await this.profileImageWriter.deleteByUserId(input.userId);
 		}
 
-		const url = this.localStorageService.getPublicUrl(
-			input.fileName,
-			input.folder,
-		);
-
-		const image = new ProfileImage();
-		image.id = crypto.randomUUID();
-		image.userId = input.userId;
-		image.url = input.fileName;
-		image.nameOriginal = input.originalName;
-		image.typeFile = input.typeFile;
-		image.createdAt = new Date();
+		const image = ProfileImage.create({
+			userId: input.userId,
+			url: input.fileName,
+			nameOriginal: input.originalName,
+			typeFile: input.typeFile,
+		});
 
 		const saved = await this.profileImageWriter.save(image);
 
 		return {
 			id: saved.id,
-			url: url,
+			url: this.localStorageService.getPublicUrl(saved.url, input.folder),
 			nameOriginal: saved.nameOriginal,
 			typeFile: saved.typeFile,
 		};
