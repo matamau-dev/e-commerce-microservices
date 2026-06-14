@@ -2,73 +2,89 @@ import { ValidationException } from 'src/domain/exceptions/validation.exception'
 import { Email } from './email.value-object';
 
 describe('Email Value Object', () => {
-	describe('constructor', () => {
-		describe('when given valid email addresses', () => {
-			it('should successfully create an Email instance with the valid email', () => {
-				const email = new Email('Juan@Gmail.COM');
+	describe('create', () => {
+		describe('when a valid email is provided', () => {
+			it('should create an Email instance', () => {
+				const email = Email.create('juan@gmail.com');
+
+				expect(email).toBeInstanceOf(Email);
+			});
+
+			it('should normalize the email to lowercase', () => {
+				const email = Email.create('Juan@Gmail.COM');
 
 				expect(email.getValue()).toBe('juan@gmail.com');
 			});
 
-			it('should normalize the email address to lowercase', () => {
-				const email = new Email('USUARIO@DOMINIO.COM');
-
-				expect(email.getValue()).toBe('usuario@dominio.com');
-			});
-
-			it('should trim leading and trailing whitespace from the email address', () => {
-				const email = new Email('  juan@gmail.com  ');
+			it('should remove leading and trailing whitespace', () => {
+				const email = Email.create('  juan@gmail.com  ');
 
 				expect(email.getValue()).toBe('juan@gmail.com');
 			});
 		});
 
-		describe('when given invalid email addresses', () => {
+		describe('when an invalid email is provided', () => {
 			it('should throw ValidationException when the email is empty', () => {
-				expect(() => new Email('')).toThrow(ValidationException);
+				expect(() => Email.create('')).toThrow(ValidationException);
 			});
 
 			it('should throw ValidationException when the email contains only whitespace', () => {
-				expect(() => new Email('   ')).toThrow(ValidationException);
+				expect(() => Email.create('   ')).toThrow(ValidationException);
 			});
 
 			it('should throw ValidationException when the email is null', () => {
-				expect(() => new Email(null as any)).toThrow(ValidationException);
-			});
-
-			it('should throw ValidationException when the email is undefined', () => {
-				expect(() => new Email(undefined as any)).toThrow(ValidationException);
-			});
-
-			it('should throw ValidationException when the email does not contain @', () => {
-				expect(() => new Email('juangmail.com')).toThrow(
+				expect(() => Email.create(null as any)).toThrow(
 					ValidationException,
 				);
 			});
 
-			it('should throw ValidationException when the email lacks a domain', () => {
-				expect(() => new Email('juan@')).toThrow(ValidationException);
+			it('should throw ValidationException when the email is undefined', () => {
+				expect(() => Email.create(undefined as any)).toThrow(
+					ValidationException,
+				);
 			});
 
-			it('should throw ValidationException when the email lacks a domain extension', () => {
-				expect(() => new Email('juan@gmail')).toThrow(ValidationException);
+			it('should throw ValidationException when the email does not contain an at symbol', () => {
+				expect(() => Email.create('juangmail.com')).toThrow(
+					ValidationException,
+				);
+			});
+
+			it('should throw ValidationException when the email does not contain a domain', () => {
+				expect(() => Email.create('juan@')).toThrow(
+					ValidationException,
+				);
+			});
+
+			it('should throw ValidationException when the email does not contain a valid domain extension', () => {
+				expect(() => Email.create('juan@gmail')).toThrow(
+					ValidationException,
+				);
 			});
 		});
 	});
 
 	describe('equals', () => {
-		it('should return true when comparing two identical email addresses', () => {
-			const a = new Email('juan@gmail.com');
-			const b = new Email('JUAN@GMAIL.COM');
+		it('should return true when both emails represent the same normalized value', () => {
+			const firstEmail = Email.create('juan@gmail.com');
+			const secondEmail = Email.create('JUAN@GMAIL.COM');
 
-			expect(a.equals(b)).toBe(true);
+			expect(firstEmail.equals(secondEmail)).toBe(true);
 		});
 
-		it('should return false when comparing two different email addresses', () => {
-			const a = new Email('juan@gmail.com');
-			const b = new Email('pedro@gmail.com');
+		it('should return false when emails represent different values', () => {
+			const firstEmail = Email.create('juan@gmail.com');
+			const secondEmail = Email.create('pedro@gmail.com');
 
-			expect(a.equals(b)).toBe(false);
+			expect(firstEmail.equals(secondEmail)).toBe(false);
+		});
+	});
+
+	describe('getValue', () => {
+		it('should return the normalized email value', () => {
+			const email = Email.create(' Juan@Gmail.COM ');
+
+			expect(email.getValue()).toBe('juan@gmail.com');
 		});
 	});
 });
