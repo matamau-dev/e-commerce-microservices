@@ -13,9 +13,9 @@ import {
 import { UserOrmEntity } from './user.orm-entity';
 
 @Entity('addresses')
-@Index(['userId']) // consultas por usuario (muy común)
-@Index(['postalCode']) // filtros por CP (envíos, logística)
-@Index(['city', 'state']) // búsquedas geográficas
+@Index(['userId'])
+@Index(['postalCode'])
+@Index(['city', 'state'])
 export class AddressOrmEntity {
 	@PrimaryColumn('uuid')
 	id!: string;

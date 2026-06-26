@@ -9,7 +9,6 @@ import {
 import { AddressOrmEntity } from '../orm-entities/address.orm-entity';
 import { Repository } from 'typeorm';
 import { TypeormCursorPagination } from 'src/infrastructure/pagination/typeorm-cursor.pagination';
-import { Location } from 'src/domain/entities/address/location.entity';
 import { AddressMapper } from 'src/infrastructure/mappers/address.maper';
 
 export class AddressPgRepository implements AddressReader, AddressWriter {

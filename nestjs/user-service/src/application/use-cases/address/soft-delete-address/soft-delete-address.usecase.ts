@@ -1,11 +1,12 @@
 import { AddressNotFoundException } from 'src/domain/exceptions/address/address-not-found.exception';
-import {
-	AddressWriter,
-	AddressReader,
-} from '../../../../domain/repositories/address/address.repository';
+
 import { DeleteAddressInput } from './soft-delete-address.input';
 import { DeleteAddressOutput } from './soft-delete-address.output';
 import { AddressNotOwnedByUserException } from 'src/domain/exceptions/address/address-not-owned-by-user.exception';
+import {
+	AddressReader,
+	AddressWriter,
+} from 'src/domain/repositories/address/address.repository';
 export class SoftDeleteAddressUseCase {
 	constructor(
 		private readonly addressWriter: AddressWriter,
