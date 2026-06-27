@@ -6,30 +6,31 @@ import {
 	Length,
 	Matches,
 } from 'class-validator';
-import { Exclude } from 'class-transformer';
+import { Transform } from 'class-transformer';
 
 export class RegisterDto {
 	@ApiProperty({
-		description: 'El nombre completo es obligatorio.',
+		description: 'Nombre completo del usuario',
 		example: 'Juan Pérez',
 	})
+	@Transform(({ value }) => value?.trim())
 	@IsString()
-	@IsNotEmpty()
+	@Length(3, 100)
 	name!: string;
 
 	@ApiProperty({
-		description: 'El correo electrónico es obligatorio.',
+		description: 'Correo electrónico',
 		example: 'usuario@ejemplo.com',
 	})
+	@Transform(({ value }) => value?.toLowerCase()?.trim())
 	@IsEmail()
-	@IsNotEmpty()
 	email!: string;
 
 	@ApiProperty({
 		description: 'Número de teléfono mexicano de 10 dígitos',
 		example: '9611234567',
 	})
-	@IsNotEmpty()
+	@IsString()
 	@Matches(/^\d{10}$/, {
 		message: 'El teléfono debe tener exactamente 10 dígitos numéricos',
 	})
@@ -37,16 +38,11 @@ export class RegisterDto {
 
 	@ApiProperty({
 		description:
-			'Tu contraseña debe tener entre 8 y 32 caracteres e incluir al menos una mayúscula, una minúscula y un número.',
+			'Debe tener 8–32 caracteres, con mayúscula, minúscula y número',
 		example: 'Password123',
 	})
 	@IsString()
-	@IsNotEmpty()
 	@Length(8, 32)
-	@Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/, {
-		message:
-			'Tu contraseña debe tener entre 8 y 32 caracteres e incluir al menos una mayúscula, una minúscula y un número.',
-	})
-	@Exclude({ toPlainOnly: true })
+	@Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/)
 	password!: string;
 }

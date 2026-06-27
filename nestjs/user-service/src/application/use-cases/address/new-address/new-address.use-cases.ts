@@ -36,7 +36,7 @@ export class NewAddressUseCase {
 		const location = Location.create(input.location);
 
 		const address = Address.create({
-			fullName: input.isMine ? user.name : input.fullName,
+			fullName: user.name,
 			phone: input.phone,
 			location,
 			isDefault: input.isDefault,

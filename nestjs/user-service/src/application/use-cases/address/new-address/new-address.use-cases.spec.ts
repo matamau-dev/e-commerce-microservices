@@ -42,7 +42,6 @@ describe('NewAddressUseCase', () => {
 				userId: 'user-id',
 				fullName: 'Juan Pérez',
 				phone: '9611234567',
-				isMine: false,
 				isDefault: false,
 				location: {
 					street: 'Central',
@@ -57,33 +56,6 @@ describe('NewAddressUseCase', () => {
 			expect(addressWriter.create).toHaveBeenCalled();
 			expect(result.fullName).toBe('Juan Pérez');
 			expect(result.location.city).toBe('Tuxtla');
-		});
-
-		it('should use the user name on the address when isMine is set to true', async () => {
-			userReader.findById.mockResolvedValue({
-				id: 'user-id',
-				name: 'Mauricio',
-			});
-
-			addressReader.findDefaultByUserId.mockResolvedValue(null);
-
-			const result = await useCase.execute({
-				userId: 'user-id',
-				fullName: 'Otro Nombre',
-				phone: '9611234567',
-				isMine: true,
-				isDefault: false,
-				location: {
-					street: 'Central',
-					externalNumber: '123',
-					neighborhood: 'Centro',
-					city: 'Tuxtla',
-					state: 'Chiapas',
-					postalCode: '29000',
-				},
-			});
-
-			expect(result.fullName).toBe('Mauricio');
 		});
 
 		it('should mark the previous default address as non-default and save it when the new address is marked as default', async () => {
@@ -102,7 +74,6 @@ describe('NewAddressUseCase', () => {
 				userId: 'user-id',
 				fullName: 'Juan',
 				phone: '9611234567',
-				isMine: false,
 				isDefault: true,
 				location: {
 					street: 'Central',
@@ -126,7 +97,6 @@ describe('NewAddressUseCase', () => {
 					userId: 'user-id',
 					fullName: 'Juan',
 					phone: '9611234567',
-					isMine: false,
 					isDefault: false,
 					location: {
 						street: 'Central',

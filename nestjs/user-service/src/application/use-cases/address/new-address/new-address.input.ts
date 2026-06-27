@@ -6,6 +6,5 @@ export interface NewAddressInput {
 	isDefault: boolean;
 	location: LocationInput;
 	userId: string;
-	isMine: boolean;
 	references?: string;
 }

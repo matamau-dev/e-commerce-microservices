@@ -7,6 +7,5 @@ export interface UpdateAddressInput {
 	phone?: string;
 	isDefault?: boolean;
 	location?: LocationInput;
-	isMine?: boolean;
 	references?: string;
 }

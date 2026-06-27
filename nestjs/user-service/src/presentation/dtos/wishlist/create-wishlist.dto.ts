@@ -1,5 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsBoolean, IsOptional, IsUUID } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsBoolean, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateWishlistDto {
 	@ApiPropertyOptional({
@@ -7,6 +8,7 @@ export class CreateWishlistDto {
 		example: 'Mis productos favoritos',
 	})
 	@IsOptional()
+	@Transform(({ value }) => value?.trim())
 	@IsString()
 	name?: string;
 
@@ -16,6 +18,7 @@ export class CreateWishlistDto {
 		default: false,
 	})
 	@IsOptional()
+	@Transform(({ value }) => value === 'true' || value === true)
 	@IsBoolean()
 	isPrivate?: boolean;
 }

@@ -4,10 +4,11 @@ import {
 	IsBoolean,
 	IsOptional,
 	ValidateNested,
-	IsPhoneNumber,
 	Length,
-	IsNotEmpty,
 	Matches,
+	IsNotEmpty,
+	MaxLength,
+	IsDefined,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { LocationDto } from './location.dto';
@@ -25,6 +26,7 @@ export class CreateAddressDto {
 		description: 'Número de teléfono mexicano de 10 dígitos',
 		example: '9611234567',
 	})
+	@IsString()
 	@IsNotEmpty()
 	@Matches(/^\d{10}$/, {
 		message: 'El teléfono debe tener exactamente 10 dígitos numéricos',
@@ -42,16 +44,10 @@ export class CreateAddressDto {
 		type: () => LocationDto,
 		description: 'Ubicación detallada de la dirección',
 	})
+	@IsDefined()
 	@ValidateNested()
 	@Type(() => LocationDto)
 	location!: LocationDto;
-
-	@ApiProperty({
-		example: true,
-		description: 'Indica si la dirección pertenece al usuario autenticado',
-	})
-	@IsBoolean()
-	isMine!: boolean;
 
 	@ApiPropertyOptional({
 		example: 'Casa azul con portón negro',
@@ -59,6 +55,6 @@ export class CreateAddressDto {
 	})
 	@IsOptional()
 	@IsString()
-	@Length(0, 255)
+	@MaxLength(255)
 	references?: string;
 }
