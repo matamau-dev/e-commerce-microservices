@@ -31,7 +31,12 @@ async function bootstrap() {
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('product/api/v1/docs', app, document);
+	SwaggerModule.setup('product/api/v1/docs', app, document, {
+		swaggerOptions: {
+			tagsSorter: 'alpha',
+			operationsSorter: 'alpha',
+		},
+	});
 
 	app.enableCors({
 		origin: '*',

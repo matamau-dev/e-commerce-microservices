@@ -91,8 +91,6 @@ export class UpdateCategoryUseCase {
 
 		if (slugAlreadyExists) {
 			throw new CategoryAlreadyExistsException(slug);
-			// Si luego quieres algo más preciso, mejor usa:
-			// throw new CategorySlugAlreadyExistsException();
 		}
 	}
 

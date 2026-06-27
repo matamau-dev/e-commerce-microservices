@@ -4,6 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { CategoryOrmEntity } from './orm-entities/category.orm-entity';
 import { BrandOrmEntity } from './orm-entities/brand.orm-entity';
+import { ProductLineOrmEntity } from './orm-entities/product-line.orm-entity';
 
 export const getTypeOrmConfig = (
 	configService: ConfigService,
@@ -15,7 +16,7 @@ export const getTypeOrmConfig = (
 	password: configService.get('database.password'),
 	database: configService.get('database.name'),
 
-	entities: [CategoryOrmEntity, BrandOrmEntity],
+	entities: [CategoryOrmEntity, BrandOrmEntity, ProductLineOrmEntity],
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 
@@ -32,7 +33,7 @@ export const AppDataSource = new DataSource({
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_BASE,
 
-	entities: [CategoryOrmEntity, BrandOrmEntity],
+	entities: [CategoryOrmEntity, BrandOrmEntity, ProductLineOrmEntity],
 
 	migrations: [__dirname + '/migrations/*{.ts,.js}'],
 

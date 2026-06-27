@@ -11,7 +11,7 @@ export interface CategoryReader {
 	findByIdWithDeleted(id: string): Promise<Category | null>;
 
 	existBySlug(slug: string): Promise<boolean>;
-	existsBySlugExcludingId(slug: string, categoryID: string): Promise<boolean>;
+	existsBySlugExcludingId(slug: string, id: string): Promise<boolean>;
 	hasActiveChildren(parentID: string): Promise<boolean>;
 }
 

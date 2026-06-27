@@ -6,7 +6,7 @@ export class ProductLine {
 		public name: string,
 		public readonly createdAt: Date,
 		public updatedAt: Date,
-		public slug?: string,
+		public slug: string,
 		public readonly deletedAt?: Date,
 	) {}
 
@@ -34,5 +34,19 @@ export class ProductLine {
 			input.updatedAt,
 			input.slug,
 		);
+	}
+
+	changeName(name: string) {
+		this.touch();
+		this.name = name;
+	}
+
+	changeSlug(slug: string) {
+		this.touch();
+		this.slug = slug;
+	}
+
+	private touch() {
+		this.updatedAt = new Date();
 	}
 }
